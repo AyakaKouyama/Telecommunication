@@ -6,6 +6,9 @@
 *.lo
 *.o
 *.obj
+*.cbp
+*.depend
+*.layout
 
 # Precompiled Headers
 *.gch
