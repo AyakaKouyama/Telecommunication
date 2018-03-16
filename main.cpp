@@ -1,11 +1,13 @@
 #include <iostream>
 #include <conio.h>
+#include <cstdlib>
+#include <ctime>
 #include "CodeWord.h"
 #include "Print.h"
 #include "File.h"
 using namespace std;
 
-template<typename T> int printVector(vector<T> v)
+template<typename T> void printVector(vector<T> v)
 {
     for(int i = 0; i< v.size(); i++)
     {
@@ -13,9 +15,42 @@ template<typename T> int printVector(vector<T> v)
     }
 }
 
+void randomError(vector<int>& text, vector<int>& text2)
+{
+    for(int j = 0;  j<text.size(); j+=16)
+    {
+        int r = rand()%(16-1) + j;
+        if(text[r] == 0)
+        {
+            text[r] = 1;
+            text2[r] = 1;
+        }
+
+        else
+        {text[r] = 0;
+        text2[r] = 0;
+        }
+
+        int r2 = rand()%(16-1) + j;
+        if(text[r2] == 0)
+        {
+            text[r2] = 1;
+            text2[r2] = 1;
+        }
+
+        else
+        {
+            text[r2] = 0;
+            text2[r2] = 0;
+        }
+
+
+    }
+}
 
 int main()
 {
+    srand(time(0));
     vector<int> binary;
     vector<int> result;
     vector<string> textFromFile;
@@ -94,6 +129,7 @@ int main()
             codeFile3.readFromFile(tests);
             converter.BinaryFromFileToString(codeFromFile, binaryCodeFromFile);
             converter.BinaryFromFileToString(tests, test);
+            randomError(test, binaryCodeFromFile);
 
             vector<int> to;
             vector<char> czary_mary;

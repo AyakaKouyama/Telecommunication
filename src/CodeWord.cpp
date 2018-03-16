@@ -147,8 +147,10 @@ void CodeWord::decode(vector<int>& codeWord)
             {
                 result[i + k] += error[i][j] * codeWord[j+k];
             }
-            result[i + k ] %= 2;
+            result[i + k] %= 2;
+            cout<<result[i+k];
         }
+       cout<<endl;
     }
 
     int counter = 0;
@@ -168,7 +170,12 @@ void CodeWord::decode(vector<int>& codeWord)
             }
             if(counter == countTo)
             {
-                codeWord[i+k] = 0 ? 1 : 0;
+                if(codeWord[i+k] == 0)
+                {
+                    codeWord[i+k] = 1;
+                }
+                else
+                    codeWord[i+k] = 0;
                 found == true;
             }
         }
@@ -178,12 +185,15 @@ void CodeWord::decode(vector<int>& codeWord)
     {
         bool match;
         for(int l = 0; l<codeWord.size(); l += errorM)
-{
+        {
+            counter = 0;
         for(int i = 0; i< errorM; i++)
         {
+
         for(int j = i+1; j< errorM; j++)
         {
             match = true;
+
             for(int k = 0; k< errorN; k++)
             {
                 if(error[k][i] ^ error[k][j] != result[k + l])
@@ -191,11 +201,13 @@ void CodeWord::decode(vector<int>& codeWord)
                     match = false;
                     break;
                 }
-               // cout<<(error[k][i]^error[k][j]);
             }
+
         if(match == true)
         {
-           // cout<<i+l<<" "<<j+l<<endl;
+            counter++;
+           // cout<<counter<<endl;
+           cout<<i + l<<" "<<j+ l<<endl;
             if(codeWord[i+l] == 0)
             {
                 codeWord[i+l] = 1;
@@ -209,9 +221,8 @@ void CodeWord::decode(vector<int>& codeWord)
             }
             else
                 codeWord[j+l] = 0;
+                break;
 
-//            codeWord[i+l] = 0 ? 1 : 0;
-//            codeWord[j+l] = 0 ? 1 : 0;
         }
         }
     }
