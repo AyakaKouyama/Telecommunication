@@ -5,9 +5,16 @@ File::~File()
     file.close();
 }
 
-int File::openFile(string name)
+int File::openFile(string name, bool flushMode)
 {
-    file.open(name, ios::in|ios::out);
+    if(flushMode == false)
+    {
+      file.open(name, ios::in|ios::out);
+    }
+    else
+    {
+       file.open(name, ios::in|ios::out|ios::trunc);
+    }
 
     if(file.is_open() == false)
     {
@@ -29,14 +36,14 @@ void File::readFromFile(vector<string>& textFromFile)
 
 
 
-void File::saveToFile(int size, vector<int>& result)
+void File::saveToFile(int size, vector<int>& result, int lineLength)
 {
     int endLine = 0;
     for(int i = 0; i<size; i++)
     {
         file<<result[i];
         endLine++;
-        if(endLine == 12)
+        if(endLine == lineLength)
         {
             file<<endl;
             endLine = 0;

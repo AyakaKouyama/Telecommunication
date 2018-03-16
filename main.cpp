@@ -1,105 +1,120 @@
 #include <iostream>
+#include <conio.h>
 #include "CodeWord.h"
 #include "Print.h"
 #include "File.h"
 using namespace std;
 
-int vectorLength(vector<string> v)
+template<typename T> int printVector(vector<T> v)
 {
-    int counter = 0;
-    for(int i = 0; i<v.size(); i++)
+    for(int i = 0; i< v.size(); i++)
     {
-        counter += v[i].length();
+        cout<<v[i];
     }
-    return counter;
 }
+
+
 int main()
 {
     vector<int> binary;
     vector<int> result;
     vector<string> textFromFile;
+    int mode, answer;
     File dataFile;
-    if(dataFile.openFile("dane.txt") ==0)
+    Convert converter;
+
+    if(dataFile.openFile("dane.txt", false) ==0)
     {
         cout<<"Blad otwarcia pliku"<<endl;
         return 0;
     }
-    dataFile.readFromFile(textFromFile);
-    Convert converter(vectorLength(textFromFile));
-    CodeWord code;
 
+    do
+    {
+    cout<<"__________________________________"<<endl;
+    cout<<"Wybierz tryb: \n 1. Korekcja pojedynczego bledu \n 2. Korekcja podwojnego bledu\n";
+    cout<<"__________________________________"<<endl;
+    cin>>mode;
+    system("cls");
+    }while(mode < 1 || mode >2);
+
+
+    CodeWord code(mode);
+    system("cls");
+
+    dataFile.readFromFile(textFromFile);
     for(int i = 0; i<textFromFile.size(); i++)
     {
         converter.stringToBinary(binary, textFromFile[i]);
         code.generate(binary, result);
     }
 
-    int answer;
-    cout<<"Co chcesz zrobiæ?\n 1. Zapisz kod do pliku. \n 2. Dekoduj dane z pliku\n";
-    cin>>answer;
+    do
+    {
+        cout<<"__________________________________"<<endl;
+        cout<<"Co chcesz zrobic?\n 1. Zapisz kod do pliku \n 2. Dekoduj dane z pliku\n";
+        cout<<"__________________________________"<<endl;
+        cin>>answer;
+        system("cls");
+    }while(answer < 1 || answer > 2);
+
+
     switch(answer)
     {
     case 1:
         {
             File codeFile;
-            codeFile.openFile("kod.txt");
-            codeFile.saveToFile(result.size(), result);
+            codeFile.openFile("kod.txt", true);
+            if(mode == 1)
+            {
+              codeFile.saveToFile(result.size(), result, 12);
+            }
+            else
+            {
+               codeFile.saveToFile(result.size(), result, 16);
+            }
+
+            cout<<"Pomyslnie zapisano kod do pliku."<<endl;
             break;
         }
     case 2:
         {
-            File codeFile2;
-            codeFile2.openFile("kod.txt");
-            File codeFile3;
-            codeFile3.openFile("kod.txt");
             vector<string> codeFromFile;
             vector<int>  binaryCodeFromFile;
             vector<string> tests;
             vector<int> test;
 
+            File codeFile2;
+            codeFile2.openFile("kod.txt", false);
+            File codeFile3;
+            codeFile3.openFile("kod.txt", false);
+
 
             codeFile2.readFromFile(codeFromFile);
             codeFile3.readFromFile(tests);
+            converter.BinaryFromFileToString(codeFromFile, binaryCodeFromFile);
+            converter.BinaryFromFileToString(tests, test);
 
-            for(int i = 0; i<codeFromFile.size(); i++)
-            {
-                string current = codeFromFile[i];
-                for(int j = 0; j<current.length(); j++)
-                {
-                 binaryCodeFromFile.push_back(current[j] - '0');
-                }
-            }
-
-             for(int i = 0; i<tests.size(); i++)
-            {
-                string current = tests[i];
-                for(int j = 0; j<current.length(); j++)
-                {
-                 test.push_back(current[j] - '0');
-                }
-            }
             vector<int> to;
             vector<char> czary_mary;
             code.removeParityBits(test, to);
             converter.binaryToString(to, czary_mary);
-            for(int i = 0;i <czary_mary.size(); i++)
-            {
-                cout<<czary_mary[i];
-            }
 
+            cout<<"\nZawartosc pliku przed korekcja bledow:"<<endl;
+            printVector(czary_mary);
             cout<<endl;
+
             code.decode(binaryCodeFromFile);
             vector<char> bToS2;
             vector<int> finalResult;
-
             code.removeParityBits(binaryCodeFromFile, finalResult);
-
-
             converter.binaryToString(finalResult, bToS2);
-            for(int i = 0; i<bToS2.size(); i++)
-            {
-                cout<<bToS2[i];
-            }
+
+            cout<<"Kod po korekcji bledow:"<<endl;
+            printVector(bToS2);
+            cout<<endl;
+
+
             break;
         }
     default:
@@ -109,5 +124,7 @@ int main()
         }
     }
 
+    cout<<"\nNacisnij dowolny klawisz, aby zakonczyc...";
+    getch();
     return 0;
 }

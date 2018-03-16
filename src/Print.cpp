@@ -1,10 +1,7 @@
 #include "Print.h"
 #include <cmath>
 
-Convert::Convert(int size)
-{
-    this->size = size;
-}
+
 void Convert::stringToBinary(vector<int>& binary, string message)
 {
     int z = 0;
@@ -37,7 +34,7 @@ void Convert::binaryToString(vector<int>& binary, vector<char>& strings)
 
 }
 
-void Convert::printBinaryMessage(vector<int>& binary)
+void Convert::printBinaryMessage(vector<int>& binary, int size)
 {
     int z = 0;
     for(unsigned int i = 0; i<size; i++)
@@ -49,4 +46,16 @@ void Convert::printBinaryMessage(vector<int>& binary)
       cout<<endl;
     }
 
+}
+
+void Convert::BinaryFromFileToString(vector<string>& codeFromFile, vector<int>& binaryCodeFromFile)
+{
+    for(int i = 0; i<codeFromFile.size(); i++)
+    {
+        string current = codeFromFile[i];
+        for(int j = 0; j<current.length(); j++)
+        {
+         binaryCodeFromFile.push_back(current[j] - '0');
+        }
+    }
 }
