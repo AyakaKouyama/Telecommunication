@@ -114,13 +114,13 @@ CodeWord::~CodeWord()
 void CodeWord::generate(vector<int> binary, vector<int>& result)
 {
 
-    int sum = 0, c=0;
-   for(int k = 0; k< binary.size(); k += 8)
+    int sum = 0;
+   for(unsigned int k = 0; k< binary.size(); k += 8)
    {
-    for(int i = 0; i<generatorM; i++)
+    for(unsigned int i = 0; i<generatorM; i++)
     {
         sum = 0;
-        for(int j = 0; j<generatorN; j++)
+        for(unsigned int j = 0; j<generatorN; j++)
         {
             sum += binary[j+ k] * generator[j][i];
         }
@@ -139,33 +139,31 @@ void CodeWord::decode(vector<int>& codeWord)
 
     int *result = new int[codeWord.size()];
 
-    for(int k = 0; k<codeWord.size(); k += errorM)
+    for(unsigned int k = 0; k<codeWord.size(); k += errorM)
     {
-        for(int i = 0; i<errorN; i++)
+        for(unsigned int i = 0; i<errorN; i++)
         {
           result[i + k] = 0;
-            for(int j = 0; j<errorM; j++)
+            for(unsigned int j = 0; j<errorM; j++)
             {
                 result[i + k] += error[i][j] * codeWord[j+k];
             }
             result[i + k] %= 2;
-            cout<<result[i+k];
         }
-       cout<<endl;
     }
 
 
 
     int counter = 0;
     bool found = false;
-    for(int k = 0; k<codeWord.size(); k += errorM)
+    for(unsigned int k = 0; k<codeWord.size(); k += errorM)
     {
         found = false;
-        for(int i = 0; i<errorM; i++)
+        for(unsigned int i = 0; i<errorM; i++)
         {
 
             counter = 0;
-            for(int j = 0; j<errorN; j++)
+            for(unsigned int j = 0; j<errorN; j++)
             {
                 if(error[j][i] == result[j+ k])
                 {
@@ -175,7 +173,6 @@ void CodeWord::decode(vector<int>& codeWord)
             }
             if(counter == countTo)
             {
-                cout<<i+k<<" "<<"gut"<<endl;
                 if(codeWord[i+k] == 0)
                 {
                     codeWord[i+k] = 1;
@@ -188,22 +185,21 @@ void CodeWord::decode(vector<int>& codeWord)
             }
         }
 
-      //  cout<<found<<endl;
       if(found == false && mode == 2)
       {
       bool match;
       counter = 0;
 
-        for(int i = 0; i< errorM; i++)
+        for(unsigned int i = 0; i< errorM; i++)
         {
 
-        for(int j = i+1; j< errorM; j++)
+        for(unsigned int j = i+1; j< errorM; j++)
         {
             match = true;
 
-            for(int l = 0; l< errorN; l++)
+            for(unsigned int l = 0; l< errorN; l++)
             {
-                if(error[l][i] ^ error[l][j] != result[l + k])
+                if((error[l][i] ^ error[l][j]) != result[l + k])
                 {
                     match = false;
                     break;
@@ -212,9 +208,6 @@ void CodeWord::decode(vector<int>& codeWord)
 
         if(match == true)
         {
-          // cout<<i + k<<" "<<j+ k<<endl;
-         // counter++;
-          //cout<<counter<<endl;
             if(codeWord[i+k] == 0)
             {
                 codeWord[i+k] = 1;
@@ -227,71 +220,24 @@ void CodeWord::decode(vector<int>& codeWord)
                 codeWord[j+k] = 1;
             }
             else
-                codeWord[j+k] = 0;
-                break;
+              codeWord[j+k] = 0;
+
+            break;
 
         }
-        }
+       }
     }
       }
     }
-
-
-//    if(mode == 2 && found == false)
-//    {
-//        bool match;
-//        for(int l = 0; l<codeWord.size(); l += errorM)
-//        {
-//            counter = 0;
-//        for(int i = 0; i< errorM; i++)
-//        {
-//
-//        for(int j = i+1; j< errorM; j++)
-//        {
-//            match = true;
-//
-//            for(int k = 0; k< errorN; k++)
-//            {
-//                if(error[k][i] ^ error[k][j] != result[k + l])
-//                {
-//                    match = false;
-//                    break;
-//                }
-//            }
-//
-//        if(match == true)
-//        {
-//           cout<<i + l<<" "<<j+ l<<endl;
-//          counter++;
-//          cout<<counter<<endl;
-//            if(codeWord[i+l] == 0)
-//            {
-//                codeWord[i+l] = 1;
-//            }
-//            else
-//                codeWord[i+l] = 0;
-//
-//            if(codeWord[j+l] == 0)
-//            {
-//                codeWord[j+l] = 1;
-//            }
-//            else
-//                codeWord[j+l] = 0;
-//                break;
-//
-//        }
-//        }
-//    }
-//}
     delete [] result;
 }
 
 
 void CodeWord::removeParityBits(vector<int>& from, vector<int>& to)
 {
-    for(int i = 0; i<from.size(); i += errorM)
+    for(unsigned int i = 0; i<from.size(); i += errorM)
     {
-        for(int j = 0; j<errorM; j++)
+        for(unsigned int j = 0; j<errorM; j++)
         {
             if(j < 8)
             {

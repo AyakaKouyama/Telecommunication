@@ -25,7 +25,6 @@ int File::openFile(string name, bool flushMode)
 }
 void File::readFromFile(vector<string>& textFromFile)
 {
-    int i = 0;
     string line;
     while(!file.eof())
     {
