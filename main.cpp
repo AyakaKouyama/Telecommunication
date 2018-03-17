@@ -15,11 +15,11 @@ template<typename T> void printVector(vector<T> v)
     }
 }
 
-void randomError(vector<int>& text, vector<int>& text2)
+void randomDoubleError(vector<int>& text, vector<int>& text2)
 {
     for(int j = 0;  j<text.size(); j+=16)
     {
-        int r = rand()%(16-1) + j;
+        int r = rand()%16 + j;
         if(text[r] == 0)
         {
             text[r] = 1;
@@ -31,7 +31,7 @@ void randomError(vector<int>& text, vector<int>& text2)
         text2[r] = 0;
         }
 
-        int r2 = rand()%(16-1) + j;
+        int r2 = rand()%16 + j;
         if(text[r2] == 0)
         {
             text[r2] = 1;
@@ -44,6 +44,24 @@ void randomError(vector<int>& text, vector<int>& text2)
             text2[r2] = 0;
         }
 
+
+    }
+}
+void randomSingleError(vector<int>& text, vector<int>& text2)
+{
+    for(int j = 0;  j<text.size(); j+=8)
+    {
+        int r = rand()%8 + j;
+        if(text[r] == 0)
+        {
+            text[r] = 1;
+            text2[r] = 1;
+        }
+
+        else
+        {text[r] = 0;
+        text2[r] = 0;
+        }
 
     }
 }
@@ -114,6 +132,20 @@ int main()
         }
     case 2:
         {
+                        File codeFile;
+            codeFile.openFile("kod.txt", true);
+            if(mode == 1)
+            {
+              codeFile.saveToFile(result.size(), result, 12);
+            }
+            else
+            {
+               codeFile.saveToFile(result.size(), result, 16);
+            }
+
+            cout<<"Pomyslnie zapisano kod do pliku."<<endl;
+            codeFile.~File();
+            getch();
             vector<string> codeFromFile;
             vector<int>  binaryCodeFromFile;
             vector<string> tests;
@@ -129,7 +161,17 @@ int main()
             codeFile3.readFromFile(tests);
             converter.BinaryFromFileToString(codeFromFile, binaryCodeFromFile);
             converter.BinaryFromFileToString(tests, test);
-            randomError(test, binaryCodeFromFile);
+//            if(mode == 1)
+//            {
+//               randomSingleError(test, binaryCodeFromFile);
+//            }
+//            else if(mode == 2)
+            {
+
+
+randomDoubleError(test, binaryCodeFromFile);
+            }
+
 
             vector<int> to;
             vector<char> czary_mary;
