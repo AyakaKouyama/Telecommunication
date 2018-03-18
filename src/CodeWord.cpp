@@ -208,6 +208,7 @@ void CodeWord::decode(vector<int>& codeWord)
 
         if(match == true)
         {
+
             if(codeWord[i+k] == 0)
             {
                 codeWord[i+k] = 1;
